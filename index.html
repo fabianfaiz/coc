@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator Hammer Jam CoC - Ramuan Tukang & Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Supercell-Magic&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0f141c;
+      --card-bg: #18202d;
+      --card-border: #283548;
+      --gold-primary: #f59e0b;
+      --gold-hover: #d97706;
+      --gold-glow: rgba(245, 158, 11, 0.25);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      
+      /* Distinct Card Colors Required */
+      --red-bg: #2d1217;
+      --red-border: #ef4444;
+      --red-text: #fca5a5;
+      --red-badge: #7f1d1d;
+      --red-glow: rgba(239, 68, 68, 0.25);
+      
+      --green-bg: #0d2818;
+      --green-border: #10b981;
+      --green-text: #6ee7b7;
+      --green-badge: #064e3b;
+      --green-glow: rgba(16, 185, 129, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 0%, #1f2a3c 0%, var(--bg-dark) 70%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 24px 16px 60px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .event-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #b45309, #d97706);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 12px var(--gold-glow);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      margin-bottom: 8px;
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    /* Main Tab Selector */
+    .category-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn .icon {
+      font-size: 24px;
+    }
+
+    .tab-btn.active {
+      border-color: var(--gold-primary);
+      background: linear-gradient(180deg, #242f40 0%, #1a2230 100%);
+      color: #fff;
+      box-shadow: 0 0 16px var(--gold-glow);
+    }
+
+    /* Input Card */
+    .card-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Inputs Row */
+    .time-inputs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      background: #0f1520;
+      border: 1.5px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px 34px 12px 14px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-wrapper input:focus {
+      border-color: var(--gold-primary);
+      box-shadow: 0 0 0 3px var(--gold-glow);
+    }
+
+    .input-wrapper .unit {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    /* Presets */
+    .preset-container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .preset-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-right: 4px;
+    }
+
+    .preset-chip {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .preset-chip:hover {
+      background: #334155;
+      color: #fff;
+    }
+
+    .preset-chip.active-preset {
+      border-color: var(--gold-primary);
+      color: var(--gold-primary);
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    /* Results Grid */
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .results-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* CARD MERAH: HITUNGAN ASLI (BELUM SELESAI / KOMA) */
+    .card-asli-merah {
+      background: var(--red-bg) !important;
+      border: 2px solid var(--red-border) !important;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 6px 20px var(--red-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-asli-merah::before {
+      content: "⚠️ BELUM TUNTAS / ANGKA KOMA";
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--red-badge);
+      color: #fecaca;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-bottom-left-radius: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    /* CARD HIJAU: DIBULATKAN (SELESAI / PRAKTIS DI GAME) */
+    .card-bulat-hijau {
+      background: var(--green-bg) !important;
+      border: 2px solid var(--green-border) !important;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 6px 20px var(--green-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-bulat-hijau::before {
+      content: "✅ SELESAI / REKOMENDASI GAME";
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--green-badge);
+      color: #a7f3d0;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-bottom-left-radius: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .result-header {
+      margin-bottom: 16px;
+    }
+
+    .result-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+
+    .card-asli-merah .result-badge {
+      background: rgba(239, 68, 68, 0.25);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .card-bulat-hijau .result-badge {
+      background: rgba(16, 185, 129, 0.25);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .result-title {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .card-asli-merah .result-title {
+      color: #fca5a5;
+    }
+
+    .card-bulat-hijau .result-title {
+      color: #6ee7b7;
+    }
+
+    .result-highlight {
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 0;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1.1;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .card-asli-merah .stat-number {
+      color: #ef4444;
+    }
+
+    .card-bulat-hijau .stat-number {
+      color: #10b981;
+    }
+
+    .stat-number .sub {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .stat-detail {
+      font-size: 13px;
+      color: var(--text-main);
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Multi Option inside Dibulatkan */
+    .option-box {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 10px;
+      border-left: 3px solid var(--green-border);
+    }
+
+    .option-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #a7f3d0;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .option-desc {
+      font-size: 13px;
+      color: #e2e8f0;
+      line-height: 1.4;
+    }
+
+    /* Explanation Summary */
+    .info-box {
+      background: #18202d;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 24px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+
+    .info-box strong {
+      color: var(--gold-primary);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 32px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="event-badge">⚡ Hammer Jam Special Event</div>
+    <h1>Kalkulator Ramuan CoC</h1>
+    <p class="subtitle">Hitung kebutuhan Ramuan Tukang & Laboratorium secara akurat dengan perbandingan hitungan asli desimal dan pembulatan riil di game.</p>
+  </header>
+
+  <!-- Category Switcher -->
+  <div class="category-tabs">
+    <button class="tab-btn active" id="tab-builder" onclick="setCategory('builder')">
+      <span class="icon">🔨</span>
+      <div>
+        <div>Ramuan Tukang</div>
+        <div style="font-size: 11px; font-weight: 500; opacity: 0.8;">1 Jam memotong 10 Jam</div>
+      </div>
+    </button>
+    <button class="tab-btn" id="tab-lab" onclick="setCategory('lab')">
+      <span class="icon">🧪</span>
+      <div>
+        <div>Ramuan Laboratorium</div>
+        <div style="font-size: 11px; font-weight: 500; opacity: 0.8;">1 Jam memotong 24 Jam</div>
+      </div>
+    </button>
+  </div>
+
+  <!-- Main Inputs -->
+  <div class="card-panel">
+    <div class="card-title">
+      <span>⏱️</span> Masukkan Durasi Waktu Awal
+    </div>
+
+    <div class="time-inputs">
+      <div class="input-group">
+        <label for="input-days">Hari (Days)</label>
+        <div class="input-wrapper">
+          <input type="number" id="input-days" min="0" max="30" oninput="calculate()">
+          <span class="unit">d</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="input-hours">Jam (Hours)</label>
+        <div class="input-wrapper">
+          <input type="number" id="input-hours" min="0" max="23" oninput="calculate()">
+          <span class="unit">h</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="input-mins">Menit (Mins)</label>
+        <div class="input-wrapper">
+          <input type="number" id="input-mins" min="0" max="59" oninput="calculate()">
+          <span class="unit">m</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Presets -->
+    <div class="preset-container">
+      <span class="preset-label">Preset Cepat:</span>
+      <button class="preset-chip" onclick="setPreset(2, 16, 0, this)">2d 16h (Contoh)</button>
+      <button class="preset-chip" onclick="setPreset(1, 0, 0, this)">1 Hari</button>
+      <button class="preset-chip" onclick="setPreset(3, 12, 0, this)">3d 12h</button>
+      <button class="preset-chip" onclick="setPreset(5, 0, 0, this)">5 Hari</button>
+      <button class="preset-chip" onclick="setPreset(7, 0, 0, this)">7 Hari</button>
+      <button class="preset-chip" onclick="setPreset(12, 0, 0, this)">12 Hari</button>
+    </div>
+  </div>
+
+  <!-- Results Section -->
+  <div class="results-grid">
+    
+    <!-- CARD 1: MERAH (HITUNGAN ASLI KOMA / BELUM SELESAI) -->
+    <div class="card-asli-merah">
+      <div class="result-header">
+        <span class="result-badge">Hasil Matematika Murni</span>
+        <h3 class="result-title">Hitungan Asli (Koma)</h3>
+      </div>
+
+      <div class="result-highlight">
+        <div class="stat-label">Kebutuhan Ramuan:</div>
+        <div class="stat-number">
+          <span id="asli-potions">-</span>
+          <span class="sub">Ramuan</span>
+        </div>
+        <div class="stat-detail">
+          <span>⏱️ Selesai dalam:</span>
+          <strong id="asli-time-text" style="color: #fca5a5;">-</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 2: HIJAU (HITUNGAN DIBULATKAN / SELESAI DI GAME) -->
+    <div class="card-bulat-hijau">
+      <div class="result-header">
+        <span class="result-badge">Praktik Nyata di Game</span>
+        <h3 class="result-title">Hitungan Dibulatkan</h3>
+      </div>
+
+      <div class="result-highlight">
+        <div class="stat-label">Kebutuhan Ramuan:</div>
+        <div class="stat-number">
+          <span id="bulat-ceil-potions">-</span>
+          <span class="sub">Ramuan</span>
+        </div>
+        <div class="stat-detail">
+          <span>⏱️ Selesai dalam:</span>
+          <strong id="bulat-ceil-time" style="color: #6ee7b7;">-</strong>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Explanation Info -->
+  <div class="info-box">
+    <strong>💡 Ketentuan Perhitungan:</strong>
+    <ul style="margin-left: 20px; margin-top: 6px;">
+      <li><strong>Ramuan Tukang (Builder Potion):</strong> 1 ramuan memotong tepat <strong>10 jam</strong> durasi tukang dengan durasi konsumsi <strong>1 jam</strong> waktu riil.</li>
+      <li><strong>Ramuan Laboratorium (Research Potion):</strong> 1 ramuan memotong tepat <strong>24 jam</strong> durasi riset dengan durasi konsumsi <strong>1 jam</strong> waktu riil.</li>
+    </ul>
+  </div>
+
+  <footer>
+    Dibuat khusus untuk Clash of Clans &bull; Event Hammer Jam &bull; Update 2026
+  </footer>
+</div>
+
+<script>
+  let currentCategory = 'builder'; // 'builder' or 'lab'
+
+  function setCategory(cat) {
+    currentCategory = cat;
+    document.getElementById('tab-builder').classList.toggle('active', cat === 'builder');
+    document.getElementById('tab-lab').classList.toggle('active', cat === 'lab');
+    calculate();
+  }
+
+  function setPreset(days, hours, mins, btnElement) {
+    document.getElementById('input-days').value = days;
+    document.getElementById('input-hours').value = hours;
+    document.getElementById('input-mins').value = mins;
+
+    document.querySelectorAll('.preset-chip').forEach(el => el.classList.remove('active-preset'));
+    if (btnElement) {
+      btnElement.classList.add('active-preset');
+    }
+    calculate();
+  }
+
+  function formatHoursToHM(totalHours) {
+    if (totalHours <= 0) return '0 Menit';
+    const totalMinutes = Math.round(totalHours * 60);
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+    let parts = [];
+    if (h > 0) parts.push(h + ' Jam');
+    if (m > 0) parts.push(m + ' Menit');
+    return parts.join(' ') || '0 Menit';
+  }
+
+  function calculate() {
+    let daysStr = document.getElementById('input-days').value.trim();
+    let hoursStr = document.getElementById('input-hours').value.trim();
+    let minsStr = document.getElementById('input-mins').value.trim();
+
+    if (daysStr === '' && hoursStr === '' && minsStr === '') {
+      document.getElementById('asli-potions').innerText = '-';
+      document.getElementById('asli-time-text').innerHTML = '-';
+      document.getElementById('bulat-ceil-potions').innerText = '-';
+      document.getElementById('bulat-ceil-time').innerText = '-';
+      return;
+    }
+
+    let days = parseFloat(daysStr) || 0;
+    let hours = parseFloat(hoursStr) || 0;
+    let mins = parseFloat(minsStr) || 0;
+
+    let effectiveHours = (days * 24) + hours + (mins / 60);
+
+    // Rate based on category:
+    // Builder: 10 hours cut per 1 hour real time
+    // Lab: 24 hours cut per 1 hour real time
+    const speedRate = (currentCategory === 'builder') ? 10 : 24;
+
+    if (effectiveHours <= 0) {
+      document.getElementById('asli-potions').innerText = '0';
+      document.getElementById('asli-time-text').innerHTML = '<strong>0 Jam</strong>';
+      document.getElementById('bulat-ceil-potions').innerText = '0';
+      document.getElementById('bulat-ceil-time').innerText = '0 Jam';
+      return;
+    }
+
+    // --- 1. HITUNGAN ASLI (KOMA / DESIMAL) ---
+    const exactPotions = effectiveHours / speedRate;
+    const exactRealHours = exactPotions;
+
+    document.getElementById('asli-potions').innerText = exactPotions.toFixed(2);
+    document.getElementById('asli-time-text').innerHTML = `<strong>${exactRealHours.toFixed(2)} Jam</strong> (${formatHoursToHM(exactRealHours)})`;
+
+    // --- 2. HITUNGAN DIBULATKAN (PRAKTEK DI GAME) ---
+    const ceilPotions = Math.ceil(exactPotions);
+    document.getElementById('bulat-ceil-potions').innerText = ceilPotions;
+    document.getElementById('bulat-ceil-time').innerText = `${ceilPotions} Jam`;
+  }
+
+  // Initial calculation on load
+  calculate();
+</script>
+
+</body>
+</html>
+
